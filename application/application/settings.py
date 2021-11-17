@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users_profiles',
+    'django_cleanup.apps.CleanupConfig',
+    'debug_toolbar',
+    'users_profiles.apps.UsersProfilesConfig',
+    'comics.apps.ComicsConfig'
 ]
 
 MIDDLEWARE = [
