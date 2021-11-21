@@ -1,10 +1,31 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Padauk&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'application/css/base.css' %}">
+    <script type="text/javascript" src="{% static 'application/js/jquery-1.7.2.min.js' %}"></script>
+    <title>{% block title %}ComicsHub{% endblock title %}</title>
+    {% block style %}{% endblock style %}
 </head>
 <body>
 
+    {% include 'inc/_header.html' %}
+
+    <main>
+        <div class="container">
+            <div class="main__inner">
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+    </main>
+
+    {% block scripts %}
+        <script src="{% static 'application/js/header.js' %}"></script>
+    {% endblock scripts %}
 </body>
-</html>`
+</html>

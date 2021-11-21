@@ -1,6 +1,21 @@
+from django import views
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .models import Comics
 
-def test_page(request):
-    return HttpResponse('<h1>Comics is active</h1>')
+#
+# class BaseView(views.View):
+#
+#     def get(self, request, *args, **kwargs):
+#         return render(request, 'base.html', {})
+
+
+class ComicsViewPage(views.View):
+
+    def get(self, request, *args, **kwargs):
+        comics = Comics.objects.prefetch_related('unique_views').all()
+        context = {
+            'comics': comics
+        }
+        return render(request, 'comics/comics_view_page.html', context=context)

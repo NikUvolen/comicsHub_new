@@ -42,7 +42,8 @@ class User(AbstractUser):
         return self.username
 
     def avatar_url(self):
-        return mark_safe(f'<img src="{self.avatar.url}" width="auto" height="120">')
+        if self.avatar:
+            return mark_safe(f'<img src="{self.avatar.url}" width="auto" height="120">')
 
     class Meta:
         verbose_name = 'User'

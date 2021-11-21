@@ -33,6 +33,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'comics.apps.ComicsConfig',
+    'users_profiles.apps.UsersProfilesConfig',
+    'authenticate.apps.AuthenticateConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,8 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
     'debug_toolbar',
-    'users_profiles.apps.UsersProfilesConfig',
-    'comics.apps.ComicsConfig'
 ]
 
 MIDDLEWARE = [
@@ -53,14 +55,21 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'application.urls'
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +136,9 @@ STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     join(BASE_DIR, 'application/static'),
-    join(BASE_DIR, 'apps/users_profiles/static')
+    join(BASE_DIR, 'apps/users_profiles/static'),
+    join(BASE_DIR, 'apps/comics/static'),
+    join(BASE_DIR, 'apps/authenticate/static')
 ]
 
 MEDIA_URL = '/media/'

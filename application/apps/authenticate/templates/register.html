@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Register :: {{ block.super }} {% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'authenticate/style/css.css' %}">
+{% endblock style %}
+
+
+
+
+{% block content %}
+
+    <div class="form-panel">
+        <div class="form-panel__inner">
+            <div class="switch-forms">
+                <button type="button" class="switch_btn" onclick="window.location.href = '{% url 'login' %}';">Sign in</button>
+                <button type="button" class="switch_btn switch_btn-active" onclick="window.location.href = '{% url 'registration' %}';">Register</button>
+            </div>
+
+            <div class="form">
+                <div class="form-content">
+
+                    <!-- register form -->
+                    <form id="register-form" action="" method="POST" class="form form-register">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="">Username<span class="req">*</span></label>
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                <label for="">Password<span class="req">*</span></label>
+                                {{ form.password }}
+                            </div>
+                            <div class="form-group">
+                                <label for="">Password confirmation<span class="req">*</span></label>
+                                {{ form.confirm_password }}
+                            </div>
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                <label for="">First name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="">Last name</label>
+                                {{ form.last_name }}
+                            </div>
+                            <button class="form-button" type="submit" name="submit" value="registration">Register</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        {% if sign_in_form.errors.items %}
+        <div class="form-error__panel active">
+            {% if form.non_field_errors %}
+				{% for error in form.non_field_errors %}
+					<span class="error-message">- {{ error }}</span>
+				{% endfor %}
+		    {% endif %}
+        
+            {% for key, value in sign_in_form.errors.items %}
+                {{ value }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'authenticate/js/forms.js' %}"></script>
+{% endblock scripts %}

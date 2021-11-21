@@ -40,14 +40,12 @@ class ImageUploadHelper:
     @property
     def path(self):
         field_to_combine, filename = self.get_attr()
-        print('---------', self.instance.slug)
         return f'images/{self.instance.__class__.__name__.lower()}{self.upload_postfix}/{field_to_combine}/{filename}'
 
     @property
     def image_path(self):
         field_to_combine = getattr(self.instance.comics_id, self.field_name_to_combine)
         filename = '.'.join([field_to_combine, self.extension])
-        print('---------', self.instance.comics_id.slug)
         return f'images/{self.instance.comics_id.__class__.__name__.lower()}{self.upload_postfix}/{self.instance.comics_id.slug}/images/{filename}'
 
     @property
