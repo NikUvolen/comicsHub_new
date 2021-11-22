@@ -3,9 +3,9 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
 
-from .views import test_page
+from .views import UserProfile
 
 urlpatterns = [
-    path('', test_page),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout')
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
+    path('<str:username>/', UserProfile.as_view(), name='user_profile')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

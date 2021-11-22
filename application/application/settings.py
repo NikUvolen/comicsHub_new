@@ -138,7 +138,7 @@ STATICFILES_DIRS = [
     join(BASE_DIR, 'application/static'),
     join(BASE_DIR, 'apps/users_profiles/static'),
     join(BASE_DIR, 'apps/comics/static'),
-    join(BASE_DIR, 'apps/authenticate/static')
+    join(BASE_DIR, 'apps/authenticate/static'),
 ]
 
 MEDIA_URL = '/media/'

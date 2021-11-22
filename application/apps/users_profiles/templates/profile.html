@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ user_profile.username }} | {{ block.super }} {% endblock title %}
+
+{% block style %} 
+    <link rel="stylesheet" href="{% static 'users_profiles/style/css.css' %}"> 
+{% endblock style %}
+
+
+{% block content %}
+
+    <div class="user_profile_page">
+        <div class="user_info">
+            <img src="{{ user_profile.avatar.url }}" alt="" class="profile-pic">
+            <h2 class="heading">{{ user_profile.username }}</h2>
+            
+            <div class="stats">
+                <div class="col">
+                    <h4>{{ comics_col }}</h4>
+                    <p>Comics</p>
+                </div>
+                <div class="col">
+                    <h4>666к</h4>
+                    <p>Subscribers</p>
+                </div>
+                <div class="col">
+                    <h4>1.12m</h4>
+                    <p>Likes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="user_comics">
+            <h1 class="card-title">Comics</h1>
+            <div class="card-rows">
+                {% for item in user_comics %}
+                    <div class="card">
+                       <img src="{{ item.preview_image.url }}" alt="" class="card-img">
+                       <div class="content">
+                           <h3>{{ item.title }}</h3>
+                           <a href="#">Read comics</a>
+                           <p>{{ item.total_unique_views }} views</p>
+                       </div>
+                    </div>
+                {% empty %}
+                    <div class="no_comics_yet">
+                        <h4>This user has no comics yet (*μ_μ)</h4>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Comics, Images
+from .models import Comics, Images, LikesDislikes
 from .forms import AtLeastOneFormSet
 
 
@@ -24,4 +24,10 @@ class ComicsAdmin(admin.ModelAdmin):
     inlines = [ImagesInLine]
 
 
+class LikeDislikesAdmin(admin.ModelAdmin):
+
+    readonly_fields = ('likes', 'dislikes')
+
+
 admin.site.register(Comics, ComicsAdmin)
+admin.site.register(LikesDislikes, LikeDislikesAdmin)
