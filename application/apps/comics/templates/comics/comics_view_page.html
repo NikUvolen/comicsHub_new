@@ -2,12 +2,6 @@
 {% load static %}
 
 
-{% block style %}
-    <link rel="stylesheet" href="{% static 'comics/css.css' %}">
-{% endblock style %}
-
-
-
 {% block content %}
     <h1 class="card-title">New comics</h1>
     <div class="card-rows">
@@ -19,7 +13,7 @@
                     <p>
                         {{ item.description }}
                     </p>
-                    <a href="#">Read comics</a>
+                    <a href="{% url 'detail_comics_view' item.slug %}">Read comics</a>
                     <p>{{ item.total_unique_views }} views</p>
                 </div>
             </div>

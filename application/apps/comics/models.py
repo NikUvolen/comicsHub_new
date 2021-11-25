@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from utils import upload_function, upload_comics_images
 from django.core.validators import FileExtensionValidator
+from taggit.managers import TaggableManager
 
 from django.db import models
 
@@ -56,6 +57,7 @@ class Comics(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg'])]
     )
     like_dislikes = GenericRelation(LikesDislikes)
+    tags = TaggableManager()
 
     author = models.ForeignKey(get_user_model(), null=True, on_delete=models.SET_NULL, verbose_name='Author')
 

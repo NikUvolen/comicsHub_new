@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
     'debug_toolbar',
+    'taggit'
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,4 @@ MEDIA_ROOT = join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users_profiles.User'
+TAGGIT_CASE_INSENSITIVE = True

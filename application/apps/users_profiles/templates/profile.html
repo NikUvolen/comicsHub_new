@@ -3,10 +3,6 @@
 
 {% block title %} {{ user_profile.username }} | {{ block.super }} {% endblock title %}
 
-{% block style %} 
-    <link rel="stylesheet" href="{% static 'users_profiles/style/css.css' %}"> 
-{% endblock style %}
-
 
 {% block content %}
 
@@ -35,11 +31,11 @@
             <h1 class="card-title">Comics</h1>
             <div class="card-rows">
                 {% for item in user_comics %}
-                    <div class="card">
-                       <img src="{{ item.preview_image.url }}" alt="" class="card-img">
+                    <div class="user_profile-card">
+                       <img src="{{ item.preview_image.url }}" alt="" class="user_profile-card-img">
                        <div class="content">
                            <h3>{{ item.title }}</h3>
-                           <a href="#">Read comics</a>
+                           <a href="{% url 'detail_comics_view' item.slug %}">Read comics</a>
                            <p>{{ item.total_unique_views }} views</p>
                        </div>
                     </div>
