@@ -14,22 +14,48 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 
+from .managers import LikesDislikesManager
+
 
 # TODO: реализовать систему лайков/дислайков после написания просмотра комикса
 # https://evileg.com/ru/post/246/
+# class LikesDislikes(models.Model):
+#     likes = models.PositiveIntegerField(default=0)
+#     dislikes = models.PositiveIntegerField(default=0)
+#
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+#     object_id = models.PositiveIntegerField()
+#     content_object = GenericForeignKey('content_type', 'object_id')
+#
+#     def get_likes_and_dislikes(self):
+#         return self.likes, self.dislikes
+#
+#     def __str__(self):
+#         return f'Likes/dislikes for {self.content_object}'
+#
+#     class Meta:
+#         verbose_name = 'Likes and dislikes'
+#         verbose_name_plural = verbose_name
+from authenticate.forms import User
+
+
 class LikesDislikes(models.Model):
-    likes = models.PositiveIntegerField(default=0)
-    dislikes = models.PositiveIntegerField(default=0)
+    LIKE = 1
+    DISLIKE = 0
+
+    VOTES = (
+        (LIKE, 'Liked'),
+        (DISLIKE, 'Not liked')
+    )
+
+    vote = models.SmallIntegerField(verbose_name="Vote", choices=VOTES)
+    user = models.ForeignKey(User, verbose_name="User", null=True, on_delete=models.SET_NULL)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    def get_likes_and_dislikes(self):
-        return self.likes, self.dislikes
-
-    def __str__(self):
-        return f'Likes/dislikes for {self.content_object}'
+    objects = LikesDislikesManager()
 
     class Meta:
         verbose_name = 'Likes and dislikes'

@@ -25,13 +25,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const likeIcon = document.querySelector('.like-icon');
-    const dislikeIcon = document.querySelector('.dislike-icon');
+    const likeCounter = document.querySelector('#col-likes');
     const likeInfo = document.querySelector('#like-info');
 
     likeIcon.addEventListener('click', () => {
         const result = changeColor(likeIcon);
-    })
-    dislikeIcon.addEventListener('click', () => {
-        const result = changeColor(dislikeIcon);
+        if (result) {
+            addLikeToCounter(likeCounter, likeInfo);
+        }
+        else {
+            removeLikeToCounter(likeCounter, likeInfo);
+        }
     })
 })

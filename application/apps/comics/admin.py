@@ -29,10 +29,5 @@ class ComicsAdmin(admin.ModelAdmin):
     inlines = [ImagesInLine]
 
 
-class LikeDislikesAdmin(admin.ModelAdmin):
-
-    readonly_fields = ('likes', 'dislikes')
-
-
 admin.site.register(Comics, ComicsAdmin)
-admin.site.register(LikesDislikes, LikeDislikesAdmin)
+admin.site.register(LikesDislikes)

@@ -137,7 +137,7 @@ STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     join(BASE_DIR, 'application/static'),
-    join(BASE_DIR, 'apps/users_profiles/static'),
+    # join(BASE_DIR, 'apps/users_profiles/static'),
     join(BASE_DIR, 'apps/comics/static'),
     join(BASE_DIR, 'apps/authenticate/static'),
 ]
@@ -152,3 +152,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users_profiles.User'
 TAGGIT_CASE_INSENSITIVE = True
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': join(BASE_DIR, 'comicsHub_cache')
+    }
+}
