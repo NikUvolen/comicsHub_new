@@ -1,13 +1,14 @@
 import json
 
 from django import views
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.core.cache import cache
 from django.db.models import Prefetch
-from django.shortcuts import render, get_object_or_404
+from django.forms import ValidationError
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
-from django.views.generic import DetailView
-
+from .forms import AddComicsForm
 from .models import Comics, Images, IP, LikesDislikes
 from users_profiles.models import User
 
@@ -24,7 +25,9 @@ def get_client_ip(request):
 class ComicsViewPage(views.View):
 
     def get(self, request, *args, **kwargs):
-        comics = Comics.objects.prefetch_related('unique_views').all()
+        comics = Comics.objects.prefetch_related('unique_views').all().only(
+            'title', 'description', 'preview_image', 'slug'
+        )
         context = {
             'comics': comics
         }
@@ -36,8 +39,11 @@ class DetailComicsView(views.View):
     @staticmethod
     def _get_comics_or_404(slug):
         try:
-            # author =
-            comics = Comics.objects.select_related('author').get(slug=slug)
+            comics = Comics.objects.prefetch_related(
+                Prefetch('author', queryset=User.objects.all().only('username', 'avatar')),
+                # 'comics__images',
+                # Prefetch('comics__images', queryset=Images.objects.all())
+            ).only('title', 'description', 'tags').get(slug=slug)
         except Comics.DoesNotExist:
             return HttpResponseNotFound("404. Page not found")
         return comics
@@ -46,7 +52,7 @@ class DetailComicsView(views.View):
         comics_values = ('title', 'description', 'preview_image', 'tags')
         author_values = ('username', 'avatar')
         comics = self._get_comics_or_404(slug)
-        images = Images.objects.filter(comics_id=comics.pk)
+        images = Images.objects.filter(comics_id=comics.pk).only('image')
 
         likes_dislikes = comics.like_dislikes
         likes = likes_dislikes.likes().count()
@@ -59,9 +65,9 @@ class DetailComicsView(views.View):
 
         context = {
             "detail_comics": comics,
+            'images': images,
             'likes': likes,
             'dislikes': dislikes,
-            'images': images
         }
         return render(request, 'comics/detail_comics_view.html', context=context)
 
@@ -75,7 +81,6 @@ class VoteView(views.View):
         obj = self.model.objects.get(pk=pk)
 
         # TODO: решить проблему "лайкодрочерства" и фризе кнопки лайкоов
-        # TODO: сделать кэширование на странице
 
         try:
             like_dislike = LikesDislikes.objects.get(
@@ -103,3 +108,77 @@ class VoteView(views.View):
             }),
             content_type="application/json"
         )
+
+
+# class AddComicsView(views.View):
+#
+#     ImageFormSet = modelformset_factory(Images, form=AddComicsImages)
+#
+#     def get(self, request, *args, **kwargs):
+#         comicsForm = AddComicsForm()
+#         formset = self.ImageFormSet(queryset=Images.objects.none())
+#
+#         context = {
+#             'comicsForm': comicsForm,
+#             'formset': formset
+#         }
+#         return render(request, 'comics/add_comics_view_page.html', context=context)
+#
+#     def post(self, request, *args, **kwargs):
+#         # comics_formset = inlineformset_factory(Comics, Images, fields=('image',))
+#         # creator = User.objects.get(username=request.user.username)
+#         # formset = comics_formset(instance=creator)
+#         comicsForm = AddComicsForm(request.POST)
+#         formset = self.ImageFormSet(request.POST, request.FILES, queryset=Images.objects.none())
+#
+#         if comicsForm.is_valid() and formset.is_valid():
+#             comics_form = comicsForm.save(commit=False)
+#             comics_form.author = request.user
+#             comics_form.save()
+#
+#             for form in formset.cleaned_data:
+#                 if form:
+#                     image = form['image']
+#                     photo = Images(comics_id=comics_form, image=image)
+#                     photo.save()
+#
+#             messages.success(request, "Yeeew, check it out on the home page!")
+#             return redirect('detail_comics_view', comics_form.slug)
+
+
+@login_required(redirect_field_name='login')
+def add_comics(request):
+    if request.method == 'POST':
+        comicsForm = AddComicsForm(request.POST, request.FILES)
+
+        if comicsForm.is_valid():
+            images = request.FILES.getlist('images')
+
+            if len(images) < 1:
+                raise ValidationError('Image count < 1')
+
+            comics_form = comicsForm.save(commit=False)
+            comics_form.author = request.user
+            comics_form.save()
+
+            for image in images:
+                Images.objects.create(
+                    comics_id=comics_form,
+                    image=image
+                )
+
+            messages.success(request, "Yeeew, check it out on the home page!")
+            return redirect('detail_comics_view', comics_form.slug)
+        else:
+            errors = ''
+            for err in comicsForm.errors:
+                errors += f'\n {comicsForm.errors[err]}'
+
+            return HttpResponse(errors)
+    else:
+        comicsForm = AddComicsForm()
+
+        context = {
+            'comicsForm': comicsForm,
+        }
+        return render(request, 'comics/add_comics_view_page.html', context=context)

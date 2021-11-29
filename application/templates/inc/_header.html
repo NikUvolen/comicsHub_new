@@ -7,7 +7,7 @@
             <a href="{{ home_url }}" class="logo">Comics<span class="logo-hub">Hub</span></a>
             {% if request.user.is_authenticated %}
             <ui class="header-links">
-                <li class="header-link"><a href="#" class="profile-link add-comics">Add news</a></li>
+                <li class="header-link"><a href="{% url 'add-comics' %}" class="profile-link add-comics">Add comics</a></li>
                 <li class="header-link">
                     <div id="top_profile_link" class="TopNavBtn TopNavBtn__profileLink">
                         {{ user.username }}

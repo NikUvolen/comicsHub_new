@@ -4,11 +4,12 @@ from django.urls import path
 
 from . import views
 from .models import Comics, LikesDislikes
-from .views import ComicsViewPage, DetailComicsView
+from .views import ComicsViewPage, DetailComicsView, add_comics
 
 urlpatterns = [
     path('', ComicsViewPage.as_view(), name='home'),
     path('comics/<str:slug>', DetailComicsView.as_view(), name='detail_comics_view'),
+    path('add-comics/', add_comics, name='add-comics'),
 
     url(r'^comics/comics/(?P<pk>\d+)/like/$',
         login_required(views.VoteView.as_view(model=Comics, vote_type=LikesDislikes.LIKE)),

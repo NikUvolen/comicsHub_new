@@ -72,7 +72,7 @@ class IP(models.Model):
 class Comics(models.Model):
 
     title = models.CharField(max_length=150, verbose_name='Title')
-    slug = AutoSlugField(populate_from='title', verbose_name='Comics url')
+    slug = AutoSlugField(populate_from='title', verbose_name='Comics url', unique=True)
     description = models.TextField(max_length=512, null=True, blank=True, verbose_name='Description')
     is_complete = models.BooleanField(default=False, verbose_name='Is complete')
     unique_views = models.ManyToManyField(IP, related_name='post_views', blank=True)

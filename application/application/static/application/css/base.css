@@ -355,7 +355,7 @@ textarea {
     transition: border .2s linear;
 }
 
-.card:nth-child(4) {
+.card:nth-child(4n) {
     margin-right: 0;
 }
 
@@ -511,7 +511,7 @@ textarea {
     transition: border .2s linear;
 }
 
-.user_profile-card:nth-child(3) {
+.user_profile-card:nth-child(3n) {
     margin-right: 0;
 }
 

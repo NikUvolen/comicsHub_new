@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Add comics | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for hidden in comicsForm.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        
+        {% comment %} {% if comicsForm. %}{% endif %} {% endcomment %}
+        {% comment %} <ul>
+            <li></li>
+        </ul> {% endcomment %}
+        {{ comicsForm.non_field_errors }}
+
+        {% for field in comicsForm %}
+            {{ field }} <br>
+        {% endfor %}
+
+        <input required type="file" name="images" multiple>
+        <button type="submit">add Comics</button>
+
+    </form>
+
+{% endblock content %}
