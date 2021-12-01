@@ -4,13 +4,15 @@ from django.urls import path
 
 from . import views
 from .models import Comics, LikesDislikes
-from .views import ComicsViewPage, DetailComicsView, add_comics
+from .views import ComicsViewPage, DetailComicsView, add_comics, DeleteComics, AllComicsView
 
 urlpatterns = [
     path('', ComicsViewPage.as_view(), name='home'),
     path('comics/<str:slug>', DetailComicsView.as_view(), name='detail_comics_view'),
     path('add-comics/', add_comics, name='add-comics'),
+    path('comics/', AllComicsView.as_view(), name='all-comics'),
 
+    url('delete-comics/<str:slug>/', DeleteComics.as_view(), name='delete_comics'),
     url(r'^comics/comics/(?P<pk>\d+)/like/$',
         login_required(views.VoteView.as_view(model=Comics, vote_type=LikesDislikes.LIKE)),
         name='comics_like'),

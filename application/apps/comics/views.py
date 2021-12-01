@@ -2,7 +2,7 @@ import json
 
 from django import views
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch
 from django.forms import ValidationError
@@ -25,11 +25,29 @@ def get_client_ip(request):
 class ComicsViewPage(views.View):
 
     def get(self, request, *args, **kwargs):
-        comics = Comics.objects.prefetch_related('unique_views').all().only(
+        comics = Comics.objects.prefetch_related('unique_views').order_by('-updated_at').only(
             'title', 'description', 'preview_image', 'slug'
-        )
+        )[:4]
         context = {
             'comics': comics
+        }
+        return render(request, 'comics/comics_main_page.html', context=context)
+
+
+class AllComicsView(views.View):
+
+    def get(self, request, *args, **kwargs):
+        comics = Comics.objects.prefetch_related('unique_views').order_by('-updated_at').only(
+            'title', 'description', 'preview_image', 'slug'
+        )
+        paginator = Paginator(comics, 8)
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'paginator': paginator,
+            'page_obj': page_obj
         }
         return render(request, 'comics/comics_view_page.html', context=context)
 
@@ -146,8 +164,11 @@ class VoteView(views.View):
 #             return redirect('detail_comics_view', comics_form.slug)
 
 
-@login_required(redirect_field_name='login')
 def add_comics(request):
+    # TODO: Разобраться с login_required и добавить к этой функции переадресацию на login
+    if not request.user.is_authenticated:
+        redirect('login')
+
     if request.method == 'POST':
         comicsForm = AddComicsForm(request.POST, request.FILES)
 
@@ -182,3 +203,9 @@ def add_comics(request):
             'comicsForm': comicsForm,
         }
         return render(request, 'comics/add_comics_view_page.html', context=context)
+
+
+class DeleteComics(views.View):
+
+    def get(self, request, author, slug, *args, **kwargs):
+        pass

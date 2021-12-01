@@ -16,11 +16,11 @@
 </head>
 <body>
 
-    {% cache 120 header %}
-        {% include 'inc/_header.html' %}
-    {% endcache %}
+    {% include 'inc/_header.html' %}
 
     <main>
+        {% block info_panel %}{% endblock info_panel %}
+
         <div class="container">
             <div class="main__inner">
                 {% block content %}{% endblock content %}

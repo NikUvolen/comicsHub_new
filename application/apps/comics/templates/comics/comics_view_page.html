@@ -3,9 +3,9 @@
 
 
 {% block content %}
-    <h1 class="card-title">New comics</h1>
+    <h1 class="card-title">Latest updates</h1>
     <div class="card-rows">
-        {% for item in comics %}
+        {% for item in page_obj %}
             <div class="card">
                 <img class="card-img" src="{{ item.preview_image.url }}" alt="">
                 <div class="content">
@@ -19,19 +19,49 @@
             </div>
         {% endfor %}
     </div>
-    {% comment %} <div>
-        {% if comics_page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ comics_page_obj.previous_page_number }}">previous</a>
-        {% endif %}
 
-        <span class="current">
-            Page {{ comics_page_obj.number }} of {{ comics_page_obj.paginator.num_pages }}.
-        </span>
+    {% if page_obj.has_other_pages %}
+    <div class="pagination-wrapper">
+        <div class="pagination">
+            
+            {% if page_obj.has_previous %}
+                <a class="previous_next" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            {% endif %}
 
-        {% if comics_page_obj.has_next %}
-            <a href="?page={{ comics_page_obj.next_page_number }}">next</a>
-            <a href="?page={{ comics_page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </div> {% endcomment %}
+            {% if page_obj.number != 1 %}
+                <a href="?page=1">1</a>
+            {% endif %}
+
+            {% for p in paginator.page_range %}
+                {% if page_obj.number == p %}
+                    <a class="active" href="?page={{ p }}">{{ p }}</a>
+                {% elif p != 1 and p != paginator.num_pages and p <= page_obj.number|add:3 and p >= page_obj.number|add:-3 %}
+                    <a href="?page={{ p }}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.number != paginator.num_pages %}
+                <a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+            {% endif %}
+            
+            {% if page_obj.has_next %}
+                <a class="previous_next" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+            {% endif %}
+    
+            {% comment %} {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %} {% endcomment %}
+        </div>
+    </div>
+    {% endif %}
 {% endblock content %}

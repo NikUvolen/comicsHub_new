@@ -6,6 +6,25 @@
     {{ detail_comics }} |  {{ block.super }}
 {% endblock titile %}
 
+{% block info_panel %}
+    {% if request.user == detail_comics.author %}
+    <div id="delete_panel" class="delete_panel">
+        <div class="delete_panel-block">
+            <div class="delete_panel-content">
+                <button id="close_button" class="close_button">X</button>
+
+                <h3 class="delete_panel-title">Вы правда хотите удалить комикс?</h3>
+
+                <div class="delete_panel-button_group">
+                    <button class="delete_panel-button button-succsess">Да</button>
+                    <button class="delete_panel-button">Нет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock info_panel %}
+
 {% block content %}
 
     <div class="comics-detail-head">
@@ -39,6 +58,7 @@
             </div>
         </div>
     </div>
+
     <div id="like-info">You liked this comics</div>
 
     <h5 class="tags-title">Tags:</h5>
@@ -50,6 +70,12 @@
         <h4>Tags not found</h4>
     {% endfor %}
     </ul>
+
+    {% if request.user == detail_comics.author %}
+    <div class="manage_panel">
+        <button id="delete" class="delete_comics">delete comics</button>
+    </div>
+    {% endif %}
 
     <div class="view_pages">
         {% for img in images %}
@@ -86,4 +112,5 @@
 {% block scripts %}
     <script src="{% static 'comics/js/csrf_token_like_dislike.js' %}"></script>
     <script src="{% static 'comics/js/like_dislike_system.js' %}"></script>
+    <script src="{% static 'comics/js/delete_comics_view.js' %}"></script>
 {% endblock scripts %}
