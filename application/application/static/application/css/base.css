@@ -838,6 +838,9 @@ textarea {
     color: black;
 }
 
+.box.sort.pull-right {
+    margin: 0 0 25px;
+}
 
 /* ==== ADAPTIVE ===== */
 

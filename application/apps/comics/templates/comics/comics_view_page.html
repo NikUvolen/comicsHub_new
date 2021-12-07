@@ -3,7 +3,27 @@
 
 
 {% block content %}
-    <h1 class="card-title">Latest updates</h1>
+    
+    <form action="" method="get" id="sortComics">
+
+        <div class="box sort pull-right">
+            <span>Сортировка:</span>
+            <button value="Сортировка" class="dropdown-toggle" type="submit" data-toggle="dropdown" id="menu2">
+             <span class="dropdown-label">По умолчанию</span>
+            </button>
+           <label class="dropdown-menu" role="menu" aria-labelledby="menu2"></label>
+            <select name="orderby" value="-updated_at">
+                <option class="sorting_option" value="updated_at">from old to new</option>
+                <option class="sorting_option" value="-updated_at">from new to old</option>
+            </select>
+            <button type="submit">Поиск</button>
+              <!-- <select><input type="submit" name="orderby" value="-id"></select>
+              <select><input type="submit" name="orderby" value="updated_at"></select>
+              <select><input type="submit" name="orderby" value="-updated_at"></select> -->
+          </div>
+
+    </form>
+
     <div class="card-rows">
         {% for item in page_obj %}
             <div class="card">
@@ -25,27 +45,27 @@
         <div class="pagination">
             
             {% if page_obj.has_previous %}
-                <a class="previous_next" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                <a class="paginator_btn previous_next" href="?orderby={{ orderby }}&page={{ page_obj.previous_page_number }}">&laquo;</a>
             {% endif %}
 
             {% if page_obj.number != 1 %}
-                <a href="?page=1">1</a>
+                <a class="paginator_btn" href="?orderby={{ orderby }}&page=1">1</a>
             {% endif %}
 
             {% for p in paginator.page_range %}
                 {% if page_obj.number == p %}
-                    <a class="active" href="?page={{ p }}">{{ p }}</a>
+                    <a class="paginator_btn active" href="?orderby={{ orderby }}&page={{ p }}">{{ p }}</a>
                 {% elif p != 1 and p != paginator.num_pages and p <= page_obj.number|add:3 and p >= page_obj.number|add:-3 %}
-                    <a href="?page={{ p }}">{{ p }}</a>
+                    <a class="paginator_btn" href="?orderby={{ orderby }}&page={{ p }}">{{ p }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.number != paginator.num_pages %}
-                <a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+                <a class="paginator_btn" href="?orderby={{ orderby }}&page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
             {% endif %}
             
             {% if page_obj.has_next %}
-                <a class="previous_next" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                <a class="paginator_btn previous_next" href="?orderby={{ orderby }}&page={{ page_obj.next_page_number }}">&raquo;</a>
             {% endif %}
     
             {% comment %} {% if page_obj.has_previous %}
@@ -58,10 +78,38 @@
             </span>
     
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a class="paginator_btn" href="?page={{ page_obj.next_page_number }}">next</a>
+                <a class="paginator_btn" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %} {% endcomment %}
         </div>
+
+        <span id="sort_option" sort_option="{{ orderby }}"></span>
     </div>
     {% endif %}
 {% endblock content %}
+
+{% block scripts %}
+<!--    {% comment %}<script>-->
+<!--        $( document ).ready(function() {-->
+<!--            $('.paginator_btn').on('click', function () {-->
+<!--                $.ajax({-->
+<!--                    url: $(this).attr('href'),-->
+<!--                    method: 'get',-->
+<!--                    data: $('#data-url').attr('ordering'),-->
+<!--                    success: function (data) {console.log(data);}-->
+<!--                })-->
+<!--            })-->
+<!--        })-->
+<!--    </script>{% endcomment %}-->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sorting_options = document.querySelectorAll('.sorting_option');
+            const sort_option = document.querySelector('#sort_option').getAttribute('sort_option');
+            sorting_options.forEach((option) => {
+                if (option.value === sort_option)
+                    option.setAttribute('selected', 'selected');
+            })
+        })
+    </script>
+{% endblock scripts %}

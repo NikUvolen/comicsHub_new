@@ -36,7 +36,8 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to=upload_user_avatars_func,
                                null=True,
                                blank=True,
-                               validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg'])])
+                               validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg'])],
+                               default=None)
 
     def __str__(self):
         return self.username

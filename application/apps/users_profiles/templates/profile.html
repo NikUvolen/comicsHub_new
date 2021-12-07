@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load include_tags %}
 
 {% block title %} {{ user_profile.username }} | {{ block.super }} {% endblock title %}
 
@@ -8,7 +9,7 @@
 
     <div class="user_profile_page">
         <div class="user_info">
-            <img src="{{ user_profile.avatar.url }}" alt="" class="profile-pic">
+            <img src="{% get_avatar_or_default user_avatar=user_profile.avatar %}" alt="" class="profile-pic">
             <h2 class="heading">{{ user_profile.username }}</h2>
             
             <div class="stats">
@@ -45,6 +46,7 @@
                     </div>
                 {% endfor %}
             </div>
+            <div class="view-all-comics"><a href="{% url 'authors-comics' user_profile.username %}">View all</a></div>
         </div>
     </div>
 

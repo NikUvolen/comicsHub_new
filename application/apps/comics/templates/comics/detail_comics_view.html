@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load cache %}
+{% load include_tags %}
 
 {% block titile %}
     {{ detail_comics }} |  {{ block.super }}
@@ -88,7 +89,7 @@
     <div class="author-info">
         <div class="user-avatar comics-author">
             <a href="{% url 'user_profile' detail_comics.author.username %}" class="profile-avatar-url">
-                <img class="profile-avatar" src="{{ detail_comics.author.avatar.url }}" alt="">
+                <img class="profile-avatar" src="{% get_avatar_or_default user_avatar=detail_comics.author.avatar %}" alt="">
             </a>
         </div>
         <div class="author-username">

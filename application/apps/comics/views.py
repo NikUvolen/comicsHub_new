@@ -6,8 +6,8 @@ from django.core.paginator import Paginator
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch
 from django.forms import ValidationError
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseNotFound, Http404
 from .forms import AddComicsForm
 from .models import Comics, Images, IP, LikesDislikes
 from users_profiles.models import User
@@ -37,19 +37,38 @@ class ComicsViewPage(views.View):
 class AllComicsView(views.View):
 
     def get(self, request, *args, **kwargs):
-        comics = Comics.objects.prefetch_related('unique_views').order_by('-updated_at').only(
+        order_by = self.request.GET.get('orderby', '-updated_at')
+        page_number = self.request.GET.get('page')
+
+        comics = Comics.objects.prefetch_related('unique_views').order_by(order_by).only(
             'title', 'description', 'preview_image', 'slug'
         )
         paginator = Paginator(comics, 8)
-
-        page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
         context = {
             'paginator': paginator,
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            'orderby': order_by
         }
         return render(request, 'comics/comics_view_page.html', context=context)
+
+    def post(self, request, *args, **kwargs):
+        page_num = self.request.GET.get('page')
+        print(page_num)
+
+
+class AuthorsComicsView(views.View):
+
+    def get(self, request, username, *args, **kwargs):
+        author = get_object_or_404(User, username=username)
+        comics = Comics.objects.prefetch_related('unique_views').filter(author=author)
+
+        context = {
+            'author': author,
+            'comics': comics
+        }
+        return render(request, 'comics/author_comics_page.html', context=context)
 
 
 class DetailComicsView(views.View):

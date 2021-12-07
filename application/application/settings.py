@@ -137,7 +137,7 @@ STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     join(BASE_DIR, 'application/static'),
-    # join(BASE_DIR, 'apps/users_profiles/static'),
+    join(BASE_DIR, 'apps/users_profiles/static'),
     join(BASE_DIR, 'apps/comics/static'),
     join(BASE_DIR, 'apps/authenticate/static'),
 ]
