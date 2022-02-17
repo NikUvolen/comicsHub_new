@@ -1,4 +1,6 @@
+from PIL import Image
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.safestring import mark_safe
@@ -32,7 +34,17 @@ class Profile(models.Model):
 
 class User(AbstractUser):
     """Custom user model"""
+    username_validator = UnicodeUsernameValidator()
 
+    username = models.CharField(
+        max_length=20,
+        unique=True,
+        help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
+        validators=[username_validator],
+        error_messages={
+            'unique': "A user with that username already exists.",
+        },
+    )
     avatar = models.ImageField(upload_to=upload_user_avatars_func,
                                null=True,
                                blank=True,
@@ -41,6 +53,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.avatar:
+            img = Image.open(self.avatar.path)
+
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.avatar.path)
 
     def avatar_url(self):
         if self.avatar:

@@ -64,11 +64,14 @@ class AuthorsComicsView(views.View):
         author = get_object_or_404(User, username=username)
         comics = Comics.objects.prefetch_related('unique_views').filter(author=author)
 
-        context = {
-            'author': author,
-            'comics': comics
-        }
-        return render(request, 'comics/author_comics_page.html', context=context)
+        if comics.count():
+            context = {
+                'author': author,
+                'comics': comics,
+            }
+            return render(request, 'comics/author_comics_page.html', context=context)
+        else:
+            return HttpResponseNotFound('Page not found')
 
 
 class DetailComicsView(views.View):
@@ -226,5 +229,10 @@ def add_comics(request):
 
 class DeleteComics(views.View):
 
-    def get(self, request, author, slug, *args, **kwargs):
-        pass
+    def get(self, request, slug, *args, **kwargs):
+        user = request.user
+        comics = get_object_or_404(Comics, slug=slug)
+        if user != comics.author:
+            return ValidationError('Вы не автор комикса')
+        comics.delete()
+        return redirect('home')

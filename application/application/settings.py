@@ -33,10 +33,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'users_profiles.apps.UsersProfilesConfig',
-    'authenticate.apps.AuthenticateConfig',
-    'comics.apps.ComicsConfig',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,7 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
     'debug_toolbar',
-    'taggit'
+    'taggit',
+    'crispy_forms',
+
+    'users_profiles.apps.UsersProfilesConfig',
+    'authenticate.apps.AuthenticateConfig',
+    'comics.apps.ComicsConfig',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+CRISPY_TEMPLATE_PACK = 'uni_form'
 
 STATIC_ROOT = join(BASE_DIR, 'static')
 STATIC_URL = '/static/'

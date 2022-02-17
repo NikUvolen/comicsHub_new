@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import views
 
+from users_profiles.models import Profile
 from .forms import LoginForm, RegistrationForm
 from .mixins import AnonymityRequiredMixin
 
@@ -35,7 +36,6 @@ class RegistrationView(AnonymityRequiredMixin, views.View):
 
     def get(self, request, *args, **kwargs):
         form = RegistrationForm(request.POST or None)
-        print(form)
         return render(request, 'register.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
@@ -51,6 +51,7 @@ class RegistrationView(AnonymityRequiredMixin, views.View):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            Profile.objects.create(user_id=user)
             login(request, user)
             return HttpResponseRedirect('/')
 

@@ -13,13 +13,13 @@
                     <div id="top_profile_link" class="TopNavBtn TopNavBtn__profileLink">
                         {{ user.username }}
                         <div class="user-avatar">
-                            <img class="profile-avatar" src="{% get_avatar_or_default user_avatar=user.avatar %}" width="50px" alt="">
+                            <img class="profile-avatar" src="{% get_avatar_or_default user_avatar=user.avatar %}" alt="Avatar">
                         </div>
                         <div class="top_profile_link-arrow"><svg fill="none" height="8" viewBox="0 0 12 8" width="12" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M2.16 2.3a.75.75 0 011.05-.14L6 4.3l2.8-2.15a.75.75 0 11.9 1.19l-3.24 2.5c-.27.2-.65.2-.92 0L2.3 3.35a.75.75 0 01-.13-1.05z" fill="currentColor" fill-rule="evenodd"></path></svg></div>
                     </div>
                     <div id="top_profile_menu" class="top_profile_menu">
                         <a href="{% url 'user_profile' user.username %}" class="top_profile_menu-link">My profile</a>
-                        <a href="#" class="top_profile_menu-link">Settings</a>
+                        <a href="{% url 'update_profile' %}" class="top_profile_menu-link">Settings</a>
                         <a href="{% url 'logout' %}" class="top_profile_menu-link">Exit</a>
                     </div>
                 </li>

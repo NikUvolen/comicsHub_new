@@ -23,20 +23,24 @@
                         {% comment %} <form id="register-form" action="" method="POST" class="form form-register">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="">Username<span class="req">*</span></label>
+                                <label>Username<span class="req">*</span></label>
                                 {{ registration_form.username }}
+                                {{ registration_form.username.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Email<span class="req">*</span></label>
+                                <label>Email<span class="req">*</span></label>
                                 {{ registration_form.email }}
+                                {{ registration_form.email.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Password<span class="req">*</span></label>
+                                <label>Password<span class="req">*</span></label>
                                 {{ registration_form.password1 }}
+                                {{ registration_form.password1.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Password confirmation<span class="req">*</span></label>
+                                <label>Password confirmation<span class="req">*</span></label>
                                 {{ registration_form.password2 }}
+                                {{ registration_form.password2.errors }}
                             </div>
                             <button class="form-button" type="submit" name="submit" value="registration">Register</button>
                         </form> {% endcomment %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load include_tags %}
+
+{% block title %}Update profile | {{ block.super }}{% endblock title %}
+
+{% block content %}
+
+<form action="" method="POST" enctype="multipart/form-data"">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <input type="text" name="username" placeholder="Username" maxlength="20" required value="{{ username }}">
+    </div>
+    <div class="form-group">
+        <img src="{% get_avatar_or_default user_avatar=user_avatar_url %}" alt="">
+        <input type="file" name="avatar" accept="image/*">
+    </div>
+
+    <button type="submit">Update</button>
+</form>
+
+{% endblock content %}

@@ -21,29 +21,37 @@
                     <!-- register form -->
                     <form id="register-form" action="" method="POST" class="form form-register">
                         {% csrf_token %}
+
+                        {{ form.non_field_errors }}
                         <div class="form-group">
-                            <label for="">Username<span class="req">*</span></label>
+                            <label>Username<span class="req">*</span></label>
                                 {{ form.username }}
+                                {{ form.username.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Password<span class="req">*</span></label>
+                                <label>Password<span class="req">*</span></label>
                                 {{ form.password }}
+                                {{ form.password.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Password confirmation<span class="req">*</span></label>
+                                <label>Password confirmation<span class="req">*</span></label>
                                 {{ form.confirm_password }}
+                                {{ form.confirm_password.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Email</label>
+                                <label>Email</label>
                                 {{ form.email }}
+                                {{ form.email.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">First name</label>
+                                <label>First name</label>
                                 {{ form.first_name }}
+                                {{ form.first_name.errors }}
                             </div>
                             <div class="form-group">
-                                <label for="">Last name</label>
+                                <label>Last name</label>
                                 {{ form.last_name }}
+                                {{ form.last_name.errors }}
                             </div>
                             <button class="form-button" type="submit" name="submit" value="registration">Register</button>
                     </form>
