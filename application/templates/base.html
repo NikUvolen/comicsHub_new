@@ -1,36 +1,31 @@
-{% load static %}
-{% load cache %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Padauk&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'application/css/base.css' %}">
-    <link rel="icon" href="{% static 'application/site_icon.png' %}">
-    <script type="text/javascript" src="{% static 'application/js/jquery-1.7.2.min.js' %}"></script>
     <title>{% block title %}ComicsHub{% endblock title %}</title>
-    {% block style %}{% endblock style %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        body {
+            background: #eee;
+        }
+    </style>
+    {% block css %}{% endblock css %}
 </head>
 <body>
+    {% block header %}
+        <header class="header">
+            {% include 'inc_/_header.html' %}
+        </header>
+    {% endblock header %}
 
-    {% include 'inc/_header.html' %}
+    {% block content %}
+    {% endblock content %}
 
-    <main>
-        {% block info_panel %}{% endblock info_panel %}
+    {% block footer %}
+    {% endblock footer %}
 
-        <div class="container">
-            <div class="main__inner">
-                {% block content %}{% endblock content %}
-            </div>
-        </div>
-    </main>
-
-    {% block scripts %}{% endblock scripts %}
-    <script src="{% static 'application/js/header.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hogan.js/3.0.2/hogan.min.js" integrity="sha512-F6j8lc1UBrmZHqUGreg4gNVVMCehTbf/LU0s/nnsQJYVeFSdpci+fcL48gsTd1Fbf08sD/kL+is2QiEssvJ70g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!--    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/draggable.bundle.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    {% block script %}{% endblock script %}
 </body>
 </html>

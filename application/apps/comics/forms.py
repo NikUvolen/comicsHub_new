@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
-from comics.models import Comics, Images
+from .models import Comics, Images
 
 
 class AtLeastOneFormSet(BaseInlineFormSet):
@@ -17,24 +17,14 @@ class AtLeastOneFormSet(BaseInlineFormSet):
             raise ValidationError("Please fill at least one form.")
 
 
-# class AddComicsInlineFormSet(BaseInlineFormSet):
-#
 class AddComicsForm(forms.ModelForm):
 
     class Meta:
         model = Comics
         fields = ['title', 'description', 'is_complete', 'preview_image']
         widgets = {
-            'title': forms.TextInput(),
-            'description': forms.Textarea(),
-            'is_complete': forms.CheckboxInput(),
-            'preview_image': forms.FileInput()
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'is_complete': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'preview_image': forms.FileInput(attrs={'class': 'form-control-file', 'id': 'input-id'})
         }
-
-
-# class AddComicsImages(forms.Form):
-#
-#     image = forms.ImageField(required=True)
-#
-#     def clean_images(self):
-

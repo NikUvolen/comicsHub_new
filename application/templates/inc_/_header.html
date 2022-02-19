@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'main_page' %}">Navbar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'main_page' %}">Comics <span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center">
+          <a class="nav-link {% if not request.user.is_authenticated %}disabled{% endif %}" href="{% url 'add_comics' %}">Add comics</a>
+          {% if request.user.is_authenticated %}
+              <div class="btn-group">
+                <a href="{% url 'user_profile' request.user.pk %}" class="btn btn-outline-secondary mr-2">{{ request.user.username }}</a>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="m-2" href="#">Settings</a></li>
+                    <li class="divider"></li>
+                    <li><a class="m-2" href="{% url 'logout' %}">Exit</a></li>
+                    <li class="divider"></li>
+                    <li><a class="m-2" href="#">...</a></li>
+                  </ul>
+              </div>
+          {% else %}
+              <a href="{% url 'user_authentication' %}" class="btn btn-outline-secondary mr-2">Sign in</a>
+              <a href="{% url 'user_registration' %}" class="btn btn-outline-primary">Sign up</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+</nav>

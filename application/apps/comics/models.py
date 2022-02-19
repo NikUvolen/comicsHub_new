@@ -1,65 +1,12 @@
+from PIL import Image
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.fields import GenericRelation
+from django.core.validators import FileExtensionValidator
+from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+
 from utils import upload_function, upload_comics_images
-from django.core.validators import FileExtensionValidator
-from taggit.managers import TaggableManager
-
-from django.db import models
-
-
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.db import models
-
-from .managers import LikesDislikesManager
-
-
-# TODO: реализовать систему лайков/дислайков после написания просмотра комикса
-# https://evileg.com/ru/post/246/
-# class LikesDislikes(models.Model):
-#     likes = models.PositiveIntegerField(default=0)
-#     dislikes = models.PositiveIntegerField(default=0)
-#
-#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-#     object_id = models.PositiveIntegerField()
-#     content_object = GenericForeignKey('content_type', 'object_id')
-#
-#     def get_likes_and_dislikes(self):
-#         return self.likes, self.dislikes
-#
-#     def __str__(self):
-#         return f'Likes/dislikes for {self.content_object}'
-#
-#     class Meta:
-#         verbose_name = 'Likes and dislikes'
-#         verbose_name_plural = verbose_name
-from authenticate.forms import User
-
-
-class LikesDislikes(models.Model):
-    LIKE = 1
-    DISLIKE = 0
-
-    VOTES = (
-        (LIKE, 'Liked'),
-        (DISLIKE, 'Not liked')
-    )
-
-    vote = models.SmallIntegerField(verbose_name="Vote", choices=VOTES)
-    user = models.ForeignKey(User, verbose_name="User", null=True, on_delete=models.SET_NULL)
-
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    objects = LikesDislikesManager()
-
-    class Meta:
-        verbose_name = 'Likes and dislikes'
-        verbose_name_plural = verbose_name
 
 
 class IP(models.Model):
@@ -70,10 +17,9 @@ class IP(models.Model):
 
 
 class Comics(models.Model):
-
-    title = models.CharField(max_length=150, verbose_name='Title')
+    title = models.CharField(max_length=50, verbose_name='Title')
     slug = AutoSlugField(populate_from='title', verbose_name='Comics url', unique=True)
-    description = models.TextField(max_length=512, null=True, blank=True, verbose_name='Description')
+    description = models.TextField(max_length=256, null=True, blank=True, verbose_name='Description')
     is_complete = models.BooleanField(default=False, verbose_name='Is complete')
     unique_views = models.ManyToManyField(IP, related_name='post_views', blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created at')
@@ -82,8 +28,8 @@ class Comics(models.Model):
         upload_to=upload_function, verbose_name='Edit preview image',
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg'])]
     )
-    like_dislikes = GenericRelation(LikesDislikes)
-    tags = TaggableManager()
+    # like_dislikes = GenericRelation(LikesDislikes)
+    # tags = TaggableManager()
 
     author = models.ForeignKey(get_user_model(), null=True, on_delete=models.SET_NULL, verbose_name='Author')
 
@@ -98,6 +44,28 @@ class Comics(models.Model):
 
     def get_preview_image(self):
         return mark_safe(f'<img src="{self.preview_image.url}" width="auto" height="130">')
+
+    @staticmethod
+    def crop_center(pil_img, crop_width: int, crop_height: int) -> Image:
+        img_width, img_height = pil_img.size
+        return pil_img.crop(((img_width - crop_width) // 2,
+                             (img_height - crop_height) // 2,
+                             (img_width + crop_width) // 2,
+                             (img_height + crop_height) // 2))
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.preview_image:
+            img = Image.open(self.preview_image.path)
+
+            if img.height > 300 or img.width > 360:
+                output_size = (img.height // (img.height / 300), img.height // (img.height / 360))
+                img.thumbnail(output_size)
+
+            img = self.crop_center(img, 300, 360)
+            img.save(self.preview_image.path)
+
     get_preview_image.short_description = 'Preview image'
 
     class Meta:

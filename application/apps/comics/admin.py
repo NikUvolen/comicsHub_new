@@ -1,8 +1,6 @@
 from django.contrib import admin
-from django.contrib.contenttypes.admin import GenericTabularInline
-from taggit.models import CommonGenericTaggedItemBase
 
-from .models import Comics, Images, LikesDislikes
+from .models import Comics, Images
 from .forms import AtLeastOneFormSet
 
 
@@ -22,7 +20,7 @@ class ComicsAdmin(admin.ModelAdmin):
     list_filter = ('is_complete',)
     fields = (
         'title', 'description', 'is_complete', 'get_preview_image', 'preview_image',
-        'tags', 'created_at', 'updated_at', 'author'
+        'created_at', 'updated_at', 'author'
     )
     readonly_fields = ('get_preview_image', 'created_at', 'updated_at')
 
@@ -30,4 +28,4 @@ class ComicsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comics, ComicsAdmin)
-admin.site.register(LikesDislikes)
+# admin.site.register(LikesDislikes)
