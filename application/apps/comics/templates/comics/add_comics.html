@@ -101,6 +101,10 @@
             background-color: rgba(234, 68, 68, 0.4);
             border-radius: 6px;
         }
+
+        .blue-background-class {
+            filter: grayscale(100%) opacity(90%);
+        }
     </style>
 {% endblock css %}
 
@@ -229,7 +233,21 @@
     <script>
         document.addEventListener('DOMContentLoaded', (e) => {
             new Sortable(document.getElementById('upload__img-wrap'), {
-                // options here
+                animation: 100,
+                ghostClass: 'blue-background-class',
+            });
+
+            let upload_img_wrap = document.getElementById('upload__img-wrap');
+            let observer = new MutationObserver(callback => {
+                upload_img_wrap.childNodes.forEach(e => {
+                   const style = e.childNodes[0].style;
+                   const bgImage = style['background-image'];
+                   console.log(bgImage);
+                });
+            });
+
+            observer.observe(upload_img_wrap, {
+                childList: true
             });
         })
     </script>

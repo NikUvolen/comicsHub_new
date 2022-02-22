@@ -8,6 +8,7 @@ from .models import Profile
 
 
 User = get_user_model()
+error_css_class = 'is-valid'
 
 
 class UserRegistration(views.View):

@@ -10,8 +10,89 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
-            {{ user_form|crispy }}
-            {{ profile_form|crispy }}
+            <div class="form-group">
+                <label for="id_username" style="font-size: 1.3em;">Username</label>
+                <div>
+                    {{ user_form.username }}
+                    {% if user_form.username.errors %}
+                        {% for error in user_form.username.errors %}
+                            <p class="invalid-f style="font-size: 1.3em;"eedback">
+                                <strong>{{ error|escape }}</strong>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <small id="emailHelp" class="form-text text-muted">
+                            The username may only contain "a-z, A-Z, 0-9, _"
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_avatar" style="font-size: 1.3em;">Avatar</label>
+                <div>
+                    {{ user_form.avatar }}
+                    {% if user_form.avatar.errors %}
+                        <p id="error_1_id_avatar" class="invalid-feedback">
+                            <strong>{{ user_form.avatar.errors }}</strong>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_status" style="font-size: 1.3em;">Status</label>
+                <div>
+                    {{ profile_form.status }}
+                    {% if profile_form.status.errors %}
+                        <p id="error_1_id_status" class="invalid-feedback">
+                            <strong>{{ profile_form.status.errors }}</strong>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_sex" style="font-size: 1.3em;">Sex</label>
+                <div>
+                    {{ profile_form.sex }}
+                    {% if profile_form.sex.errors %}
+                        <p id="error_1_id_sex" class="invalid-feedback">
+                            <strong>{{ profile_form.sex.errors }}</strong>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_birthday" style="font-size: 1.3em;">Birthday</label>
+                <div>
+                    {{ profile_form.birthday }}
+                    {% if profile_form.birthday.errors %}
+                        <p id="error_1_id_birthday" class="invalid-feedback">
+                            <strong>{{ profile_form.birthday.errors }}</strong>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_first_name" style="font-size: 1.3em;">First name</label>
+                <div>
+                    {{ profile_form.first_name }}
+                    {% if profile_form.first_name.errors %}
+                        <p id="error_1_id_first_name" class="invalid-feedback">
+                            <strong>{{ profile_form.first_name.errors }}</strong>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_last_name" style="font-size: 1.3em;">Last name</label>
+                <div>
+                    {{ profile_form.last_name }}
+                    {% if profile_form.last_name.errors %}
+                        <p id="error_1_id_last_name" class="invalid-feedback">
+                            <strong>{{ profile_form.last_name.errors }}</strong>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
 
             <button type="submit" class="btn btn-outline-primary">Edit</button>
         </form>
