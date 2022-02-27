@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
-from .models import Comics, Images
+from .models import Comics, Images, Comments
 
 
 class AtLeastOneFormSet(BaseInlineFormSet):
@@ -28,3 +28,11 @@ class AddComicsForm(forms.ModelForm):
             'is_complete': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'preview_image': forms.FileInput(attrs={'class': 'form-control-file', 'id': 'input-id'})
         }
+
+
+class AddCommentForm(forms.Form):
+
+    comment_text = forms.CharField(label=None,
+                                   max_length=512,
+                                   required=True,
+                                   widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))

@@ -5,6 +5,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from treebeard.mp_tree import MP_Node
 
 from utils import upload_function, upload_comics_images
 
@@ -91,3 +92,26 @@ class Images(models.Model):
     class Meta:
         verbose_name = 'Image'
         verbose_name_plural = 'Images'
+
+
+class Comments(MP_Node):
+    from_comics = models.ForeignKey(Comics, on_delete=models.CASCADE)
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
+
+    is_anonym = models.BooleanField(default=False)
+
+    comment = models.CharField(max_length=512, null=False, blank=False)
+    pub_date = models.DateTimeField(verbose_name='Comment\' date', auto_now_add=True)
+
+    def __str__(self):
+        return f'From {self.author} | {self.from_comics}'
+
+    @staticmethod
+    def count_comments(comics):
+        return Comments.objects.filter(from_comics=comics).count()
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+
+

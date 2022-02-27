@@ -7,8 +7,8 @@ register = template.Library()
 
 @register.simple_tag
 def get_avatar_or_default(user_avatar):
-    print(user_avatar)
     if user_avatar:
         return user_avatar.url
     else:
         return static('users/no-avatar.jpg')
+
