@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     "debug_toolbar",
 
+    'djoser',
+    'rest_framework',
+
     # Apps
     'comics.apps.ComicsConfig',
     'users.apps.UsersConfig'
@@ -144,3 +147,33 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework_simplejwt.authentication.JWTAuthentication',
+   ),
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+}
+
+# DJOSER
+DJOSER = {
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SEND_ACTIVATION_EMAIL': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'TOKEN_MODEL': None,
+    'ACTIVATION_URL': 'auth/verify/{uid}/{token}/',
+}
+
+# EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'comicshub1@ya.ru'
+EMAIL_HOST_PASSWORD = 'kovgzckbhvartqlr'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'mixa2003777@yandex.ru'

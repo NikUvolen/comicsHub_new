@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
+from django.urls import reverse_lazy
 
 from users.templatetags import include_tags
 from .models import Comics, Images, IP, Comments
@@ -21,7 +22,15 @@ def get_client_ip(request):
 
 
 def delete_comment(request, pk):
-    pass
+    if request.method == 'GET':
+        comment = get_object_or_404(Comments, pk=pk)
+
+        if comment.author == request.user or request.user.is_staff:
+            Comments.delete(comment)
+            return JsonResponse({'status': 200, 'comment_pk': comment.pk}, safe=False)
+        else:
+            return HttpResponse(403)
+    return HttpResponse(400)
 
 
 class MainPage(views.View):
@@ -112,7 +121,7 @@ class DetailViewComics(views.View):
                 'username': request.user.username,
                 'user_avatar': include_tags.get_avatar_or_default(request.user.avatar),
                 'comment_text': comment,
-                'pub_date': user_comment.pub_date.strftime("%d %B %Y, %H:%M")
+                'comment_pk': user_comment.pk
             }
 
             return JsonResponse(json_response, safe=False)

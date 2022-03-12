@@ -1,9 +1,12 @@
 from PIL import Image
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.cache import cache
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.safestring import mark_safe
+from django.utils import timezone
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 from utils import upload_user_avatars_func
 from .managers import CustomUserManager
@@ -22,7 +25,9 @@ class User(AbstractUser):
                                blank=True,
                                validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
                                default=None)
-    user_profile = models.OneToOneField('Profile', on_delete=models.CASCADE)
+
+    is_verified = models.BooleanField('Verified', default=False)
+    last_online = models.DateTimeField(blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -76,9 +81,16 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     def __str__(self):
-        return f'{self.first_name} {self.last_name} | {User.objects.get(user_profile=self)}'
+        return f'{self.first_name} {self.last_name} | {self.user}'
 
     class Meta:
         verbose_name = 'User profile'
         verbose_name_plural = 'Users profiles'
+
+
+class UserTokens(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)

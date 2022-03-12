@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Comics, Images
+from .models import Comics, Images, Comments
 from .forms import AtLeastOneFormSet
 
 
@@ -29,3 +29,4 @@ class ComicsAdmin(admin.ModelAdmin):
 
 admin.site.register(Comics, ComicsAdmin)
 # admin.site.register(LikesDislikes)
+admin.site.register(Comments)

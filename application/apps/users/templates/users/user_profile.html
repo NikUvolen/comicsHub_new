@@ -162,8 +162,7 @@
         .profile-header .profile-header-tab {
             background: #fff;
             list-style-type: none;
-            margin: -10px 0 0;
-            padding: 0 0 0 140px;
+            text-align: center;
             white-space: nowrap;
             border-radius: 0
         }
@@ -657,6 +656,7 @@
                                         {% if user.is_superuser %}
                                             <img src="https://img.icons8.com/doodle/48/000000/crown--v1.png" class="mb-4" style="width: 25px">
                                         {% endif %}
+                                        <span class="text-muted ml-2" style="font-weight: 700">{% get_online_status user %}</span>
                                     </div>
                                     {% if user_profile.status %}
                                         <p class="m-b-10">{{ user_profile.status }}</p>
@@ -674,19 +674,10 @@
                             </div>
                             <!-- END profile-header-content -->
                             <!-- BEGIN profile-header-tab -->
-                            <div>
-                                <ul class="profile-header-tab nav nav-tabs">
-                                    <li class="nav-item"><a href="#" class="nav-link active show"
-                                                            data-toggle="tab">COMICS</a></li>
-                                    <li class="nav-item"><a href="#profile-about" class="nav-link"
-                                                            data-toggle="tab">ABOUT</a></li>
-                                    <li class="nav-item"><a href="#profile-photos" class="nav-link"
-                                                            data-toggle="tab">PHOTOS</a></li>
-                                    <li class="nav-item"><a href="#profile-videos" class="nav-link"
-                                                            data-toggle="tab">VIDEOS</a></li>
-                                    <li class="nav-item"><a href="#profile-friends" class="nav-link" data-toggle="tab">FRIENDS</a>
-                                    </li>
-                                </ul>
+                            <div class="row profile-header-tab">
+                                <div class="col" style="font-weight: 600">Comics: {{ comics_count }}</div>
+                                <div class="col" style="font-weight: 600">Views: {{ comics_views }}</div>
+                                <div class="col" style="font-weight: 600">Likes: 2k</div>
                             </div>
                             <!-- END profile-header-tab -->
                         </div>

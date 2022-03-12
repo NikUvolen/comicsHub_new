@@ -12,7 +12,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'last_login', 'avatar_url')
     list_display_links = ('id', 'username')
     search_fields = ('id', 'username')
-    fields = ('username', 'email', 'avatar', 'last_login', 'date_joined')
+    fields = ('username', 'email', 'avatar', 'last_login', 'date_joined', 'is_verified', 'is_active', 'last_online')
     readonly_fields = ('email', 'last_login', 'date_joined')
 
 

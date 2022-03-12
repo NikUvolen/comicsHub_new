@@ -17,12 +17,18 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from .views import update_status
+
 from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('comics.urls')),
-    path('user/', include('users.urls'))
+    path('user/', include('users.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
+
+    path('check_online/', update_status, name='update_status')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

@@ -14,10 +14,6 @@
             margin: 0;
         }
 
-        .upload__box {
-            padding: 40px 0 40px;
-        }
-
         .upload__inputfile {
             width: 0.1px;
             height: 0.1px;
@@ -144,11 +140,13 @@
                 {{ add_comics_form.preview_image.errors }}
             </div>
 
-            <div class="upload__box">
+
+            <label style="font-size: 1.3em;" for="pages-input">Pages</label>
+            <div class="upload__box pb-5">
                 <div class="upload__btn-box">
                     <label class="upload__btn">
                         <p>Upload images</p>
-                        <input required type="file" name="images" multiple="" data-max_length="50" class="upload__inputfile">
+                        <input id="pages-input" required type="file" name="images" multiple="" data-max_length="50" class="upload__inputfile">
                     </label>
                 </div>
                 <div id="upload__img-wrap" class="row upload__img-wrap"></div>

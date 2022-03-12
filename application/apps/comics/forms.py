@@ -24,7 +24,7 @@ class AddComicsForm(forms.ModelForm):
         fields = ['title', 'description', 'is_complete', 'preview_image']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter description'}),
             'is_complete': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'preview_image': forms.FileInput(attrs={'class': 'form-control-file', 'id': 'input-id'})
         }

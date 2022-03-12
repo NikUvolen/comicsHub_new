@@ -112,6 +112,7 @@
         .modal-window {
             background-color: aliceblue;
             border-radius: 6px;
+            display: none;
         }
 
         .modal-window.delete-comment-window.open {
@@ -119,6 +120,7 @@
             max-width: 600px;
             height: 400px;
 
+            display: block;
             position: fixed;
             left: 50%;
             top: 50%;
@@ -175,23 +177,27 @@
         <div class="comments-block">
             <h5 class="comments-title"><span id="total-comments">{{ total_comments }}</span> comments</h5>
 
-            <form id="add_comment_form" action="{% url 'view_comics' comics.slug %}" method="post" class="row align-items-center mb-4" name="add-comment">
-                {% csrf_token %}
+            {% if request.user.is_authenticated %}
+                <form id="add_comment_form" action="{% url 'view_comics' comics.slug %}" method="post" class="row align-items-center mb-4" name="add-comment">
+                    {% csrf_token %}
 
-                <div class="col-11">
-                    {{ leave_comment_form.comment_text }}
-                </div>
+                    <div class="col-11">
+                        {{ leave_comment_form.comment_text }}
+                    </div>
 
-                <div class="col-1">
-                    <button id="add_comment_btn" type="submit" class="btn btn-outline-primary">Primary</button>
-                </div>
-            </form>
+                    <div class="col-1">
+                        <button id="add_comment_btn" type="submit" class="btn btn-outline-primary">Primary</button>
+                    </div>
+                </form>
+            {% else %}
+                <div class="text-center" style="font-weight: 600; color: #ababab">Log in to leave comments</div>
+            {% endif %}
 
             <div class="comments-view row">
 
                 <div id='comments-block' class="col-md-12">
                     {% for comment in comments %}
-                        <div class="media mt-4 mb-4">
+                        <div class="media mt-4 mb-4" id="{{ comment.pk }}">
                             <a class="pr-3" href="{% url 'user_profile' comment.author.pk %}">
                                 <img class="rounded-circle" alt="" src="{% get_avatar_or_default user_avatar=comment.author.avatar %}">
                             </a>
@@ -202,20 +208,22 @@
                                     <div class="col-8 d-flex">
                                         <h5 class="pr-2">{{ comment.author.username }}</h5>
                                         <span class="pr-2">{{ comment.pub_date|naturaltime }}</span>
-                                        {% if request.user == comment.author %}
-                                            <a class="delete-comment" href="">delete</a>
+                                        {% if request.user == comment.author or request.user.is_staff %}
+                                            <a class="delete-comment" delete_comment_url="{% url 'delete_comment' comment.pk %}" href="">delete</a>
                                         {% endif %}
                                     </div>
                                     <div class="col-4">
-                                        <div class="float-right reply">
-                                            <a href="#">
-                                                <span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16">
-                                                        <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
-                                                    </svg> reply
-                                                </span>
-                                            </a>
-                                        </div>
+                                        {% if request.user.is_authenticated %}
+                                            <div class="float-right reply">
+                                                <a href="#">
+                                                    <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16">
+                                                            <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
+                                                        </svg> reply
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
 
@@ -247,15 +255,17 @@
                 </div>
             </div>
 
-            <div id="modal-window-delete-comment" class="modal-window delete-comment-window">
-                <h4 class="delete-comment-window-title">Do you want to delete the comment?</h4>
-                <div class="d-flex delete-comment-window-buttons">
-                    <button type="button" id="delete-comment-window-buttons-no" class="btn btn-outline-danger">No</button>
-                    <button type="button" id="delete-comment-window-buttons-yes" class="btn btn-outline-primary">Yes</button>
+            {% if request.user.is_authenticated %}
+                <div id="modal-window-delete-comment" class="modal-window delete-comment-window">
+                    <h4 class="delete-comment-window-title">Do you want to delete the comment?</h4>
+                    <div class="d-flex delete-comment-window-buttons">
+                        <button type="button" id="delete-comment-window-buttons-no" class="btn btn-outline-danger">No</button>
+                        <button type="button" id="delete-comment-window-buttons-yes" class="btn btn-outline-primary">Yes</button>
+                    </div>
                 </div>
-            </div>
 
-            <div id="bg-modal" class="bg-modal"></div>
+                <div id="bg-modal" class="bg-modal"></div>
+            {% endif %}
         </div>
     </div>
 {% endblock content %}
@@ -263,92 +273,124 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', (e) => {
-            const scrollElem = document.querySelector('.scroll_indicate');
-            const viewPages = document.querySelector('.view_pages');
-            const scroll = localStorage.getItem('scroll') || 0;
+            function saveScroll() {
+                const scrollElem = document.querySelector('.scroll_indicate');
+                const viewPages = document.querySelector('.view_pages');
+                const scroll = localStorage.getItem('scroll') || 0;
 
-            viewPages.scrollTop = scroll;
+                viewPages.scrollTop = scroll;
 
-            function scrollIndicate() {
-                const top = viewPages.scrollTop;
-                const height = viewPages.scrollHeight - viewPages.clientHeight;
-                const scrollYCounter = (top / height) * 100;
+                function scrollIndicate() {
+                    const top = viewPages.scrollTop;
+                    const height = viewPages.scrollHeight - viewPages.clientHeight;
+                    const scrollYCounter = (top / height) * 100;
 
-                scrollElem.style.width = scrollYCounter + '%';
+                    scrollElem.style.width = scrollYCounter + '%';
+                }
+
+                viewPages.addEventListener('scroll', function() {
+                    scrollIndicate();
+                    localStorage.setItem('scroll', viewPages.scrollTop);
+                });
             }
 
-            viewPages.addEventListener('scroll', function() {
-                scrollIndicate();
-                localStorage.setItem('scroll', viewPages.scrollTop);
-            });
 
-
-            const form = $('#add_comment_form');
-            let commentsBlock = document.getElementById('comments-block');
             let total_comments = document.getElementById('total-comments');
-            form.on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    data: form.serialize(),
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
 
-                    success: function (response) {
-                        const html = `
-                            <div class="media mt-4 mb-4">
-                                <a class="pr-3" href="{% url 'user_profile' request.user.pk %}">
-                                    <img class="rounded-circle" alt="" src="${response['user_avatar']}">
-                                </a>
+            function addComment() {
+                const form = $('#add_comment_form');
+                let commentsBlock = document.getElementById('comments-block');
+                form.on('submit', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        data: form.serialize(),
+                        url: $(this).attr('action'),
+                        type: $(this).attr('method'),
 
-                                <div class="media-body">
+                        success: function (response) {
+                            const html = `
+                                <div class="media mt-4 mb-4" id="${response['comment_pk']}">
+                                    <a class="pr-3" href="{% if request.user.is_authenticated %}{% url 'user_profile' request.user.pk %}{% endif %}">
+                                        <img class="rounded-circle" alt="" src="${response['user_avatar']}">
+                                    </a>
 
-                                    <div class="row">
-                                        <div class="col-8 d-flex">
-                                            <h5 class="pr-2">${response['username']}</h5>
-                                            <span>-${response['pub_date']}</span>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="float-right reply">
-                                                <a href="#">
-                                                    <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16">
-                                                            <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
-                                                        </svg> reply
-                                                    </span>
-                                                </a>
+                                    <div class="media-body">
+
+                                        <div class="row">
+                                            <div class="col-8 d-flex">
+                                                <h5 class="pr-2">${response['username']}</h5>
+                                                <span class="pr-2">now</span>
+                                                <a class="delete-comment" delete_comment_url="" href="/ajax/delete-comment/${response['comment_pk']}">delete</a>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="float-right reply">
+                                                    <a href="#">
+                                                        <span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16">
+                                                                <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
+                                                            </svg> reply
+                                                        </span>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
+                                        ${response['comment_text']}
                                     </div>
-                                    ${response['comment_text']}
                                 </div>
-                            </div>
-                        `
+                            `
 
-                        commentsBlock.insertAdjacentHTML('afterbegin', html);
-                        total_comments.innerText = Number(total_comments.innerText) + 1;
-                    },
-                    error: function () {
-                        console.log('error');
-                    }
-                });
-            })
+                            commentsBlock.insertAdjacentHTML('afterbegin', html);
+                            total_comments.innerText = Number(total_comments.innerText) + 1;
+                        },
+                        error: function () {
+                            console.log('error');
+                        }
+                    });
+                })
+            }
 
-            const deleteBtns = document.querySelectorAll('.delete-comment');
-            const modalWindowDelete = document.getElementById('modal-window-delete-comment');
-            const bgModal = document.getElementById('bg-modal');
-            const noDeleteBtn = document.getElementById('delete-comment-window-buttons-no');
-            const yesDeleteBtn = document.getElementById('delete-comment-window-buttons-yes');
-            deleteBtns.forEach(btn => {
-                btn.addEventListener('click', e => {
-                    e.preventDefault();
-                    modalWindowDelete.classList.add('open');
-                    bgModal.classList.add('open');
+
+            function deleteComment() {
+                const deleteBtns = document.querySelectorAll('.delete-comment');
+                const modalWindowDelete = document.getElementById('modal-window-delete-comment');
+                const bgModal = document.getElementById('bg-modal');
+                const noDeleteBtn = document.getElementById('delete-comment-window-buttons-no');
+                const yesDeleteBtn = document.getElementById('delete-comment-window-buttons-yes');
+
+                deleteBtns.forEach(btn => {
+                    btn.addEventListener('click', e => {
+                        e.preventDefault();
+                        modalWindowDelete.classList.add('open');
+                        bgModal.classList.add('open');
+                        yesDeleteBtn.setAttribute('delete_comment_url', btn.getAttribute('delete_comment_url'));
+                    });
                 });
-            });
-            noDeleteBtn.addEventListener('click', e => {
-                modalWindowDelete.classList.remove('open');
-                bgModal.classList.remove('open');
-            })
+
+                noDeleteBtn.addEventListener('click', () => {
+                    modalWindowDelete.classList.remove('open');
+                    bgModal.classList.remove('open');
+                })
+
+                yesDeleteBtn.addEventListener('click', () => {
+                    modalWindowDelete.classList.remove('open');
+                    bgModal.classList.remove('open');
+                    const url = yesDeleteBtn.getAttribute('delete_comment_url');
+
+                    $.ajax({
+                        type: 'get',
+                        url: url,
+                        success: function (request) {
+                            document.getElementById(request['comment_pk']).remove();
+                            total_comments.innerText = Number(total_comments.innerText) - 1;
+                        }
+                    })
+                })
+            }
+
+
+            saveScroll();
+            addComment();
+            deleteComment();
         })
     </script>
 {% endblock script %}
