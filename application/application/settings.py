@@ -13,6 +13,8 @@ import os.path
 import sys
 from pathlib import Path
 
+from .config import (secret_key, email_host_user, email_host_password, default_from_email, email_host, email_port)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -22,7 +24,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s3y18%o=-xrw6dmw&r!svm$re=&!k^42*^oll0!ls9)yj*u#df'
+SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -171,9 +173,9 @@ DJOSER = {
 
 # EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'comicshub1@ya.ru'
-EMAIL_HOST_PASSWORD = 'kovgzckbhvartqlr'
+EMAIL_HOST = email_host
+EMAIL_PORT = email_port
+EMAIL_HOST_USER = email_host_user
+EMAIL_HOST_PASSWORD = email_host_password
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'mixa2003777@yandex.ru'
+DEFAULT_FROM_EMAIL = default_from_email
